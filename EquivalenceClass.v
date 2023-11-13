@@ -229,8 +229,8 @@ Ltac replace_InClass := create_classOf_InClass;
            | [ H : InClass ?C ?x |- InClass ?C ?x' ] => apply (ClassContainsEquivalent C x H x')
            | [ |- exists v : ?T, @?G v ] =>
              match G with
-               | appcontext[InClass ?C ?v] => fail 1 (* [?v] cannot be the same as [v] above, so we fail *)
-               | appcontext[InClass ?C _] => (* match an [InClass] expression that references a variable not scoped outside.
+               | context[InClass ?C ?v] => fail 1 (* [?v] cannot be the same as [v] above, so we fail *)
+               | context[InClass ?C _] => (* match an [InClass] expression that references a variable not scoped outside.
                                                 This is a kludge to get the correct InClass, which matches the [exists]. *)
                  let v := fresh in let H := fresh in
                    destruct (ClassInhabited C) as [ v H ]; exists v
@@ -442,7 +442,7 @@ Section description.
     intros.
     expand.
     match goal with
-      | [ |- appcontext[match ?E with _ => _ end] ] => case E
+      | [ |- context[match ?E with _ => _ end] ] => case E
     end.
     intros; subst; reflexivity.
   Qed.
@@ -458,7 +458,7 @@ Section description.
       hnf;
       unfold EquivalenceClass_eq_lift;
       repeat match goal with
-               | [ |- appcontext[match ?E with _ => _ end] ] => case E; simpl; intros
+               | [ |- context[match ?E with _ => _ end] ] => case E; simpl; intros
              end;
       subst;
       intuition.

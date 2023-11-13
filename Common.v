@@ -116,7 +116,7 @@ Section sig.
   Definition projT3 A P Q (x : @sigT2 A P Q) :=
     let (x0, _, h) as x0 return (Q (projT1 x0)) := x in h.
 
-  Definition sig_of_sig2 A P Q (x : @sig2 A P Q) := let (a, h, _) := x in exist _ a h.
+  Definition sig_of_sig2 A P Q (x : @sig2 A P Q) : {x : A | P x} := let (a, h, _) := x in exist _ a h.
   Global Coercion sig_of_sig2 : sig2 >-> sig.
   Definition proj3_sig A P Q (x : @sig2 A P Q) :=
     let (x0, _, h) as x0 return (Q (proj1_sig x0)) := x in h.
@@ -423,7 +423,7 @@ Ltac subst_eq_refl :=
 
 Ltac subst_eq_refl_dec_in_match :=
   repeat match goal with
-           | [ |- appcontext[match ?E with _ => _ end] ] =>
+           | [ |- context[match ?E with _ => _ end] ] =>
              let H := fresh in
              set (H := E) in *;
                clearbody H;
@@ -438,7 +438,7 @@ Ltac subst_eq_refl_dec_in_match :=
 
 Ltac subst_eq_refl_in_match :=
   repeat match goal with
-           | [ |- appcontext[match ?E with _ => _ end] ] =>
+           | [ |- context[match ?E with _ => _ end] ] =>
              let H := fresh in
              set (H := E) in *;
                clearbody H;
@@ -487,9 +487,9 @@ Ltac clear_hyp_unless_context hyp conVar :=
 
 Ltac recur_clear_context con :=
   repeat match goal with
-           | [ H : appcontext[con] |- _ ] =>
+           | [ H : context[con] |- _ ] =>
              recur_clear_context H; try clear H
-           | [ H := appcontext[con] |- _ ] =>
+           | [ H := context[con] |- _ ] =>
              recur_clear_context H; try clear H
          end.
 
@@ -497,7 +497,7 @@ Ltac recur_clear_context con :=
    equivalent to [fail] otherwise *)
 Ltac FreeQ expr subexpr :=
   match expr with
-    | appcontext[subexpr] => fail 1
+    | context[subexpr] => fail 1
     | _ => idtac
   end.
 
@@ -518,8 +518,8 @@ Ltac repeat_subst_mor_of_type type :=
 Ltac subst_by_rewrite_hyp_rew a H rew' :=
   rew' H; clear H;
   match goal with
-    | [ H : appcontext[a] |- _ ] => fail 1 "Rewrite failed to clear all instances of" a
-    | [ |- appcontext[a] ] => fail 1 "Rewrite failed to clear all instances of" a
+    | [ H : context[a] |- _ ] => fail 1 "Rewrite failed to clear all instances of" a
+    | [ |- context[a] ] => fail 1 "Rewrite failed to clear all instances of" a
     | _ => idtac
   end.
 
@@ -591,14 +591,14 @@ Section telescope.
 
   Fixpoint telescopeOut (t : telescope) :=
     match t with
-      | Base _ _ x y => x = y
-      | Quant _ f => forall x, telescopeOut (f x)
+      | Base _ x y => x = y
+      | Quant f => forall x, telescopeOut (f x)
     end.
 
   Fixpoint telescopeOut' (t : telescope) :=
     match t with
-      | Base _ _ f g => forall x, f x = g x
-      | Quant _ f => forall x, telescopeOut' (f x)
+      | Base _ f g => forall x, f x = g x
+      | Quant f => forall x, telescopeOut' (f x)
     end.
 
   Theorem generalized_fg_equal : forall (t : telescope),
@@ -650,8 +650,8 @@ Ltac f_equal_in f H := f_equal_in_r H ltac:(fun pf k => k (pf _ f)).
 
 Ltac eta_red :=
   repeat match goal with
-           | [ H : appcontext[fun x => ?f x] |- _ ] => change (fun x => f x) with f in H
-           | [ |- appcontext[fun x => ?f x] ] => change (fun x => f x) with f
+           | [ H : context[fun x => ?f x] |- _ ] => change (fun x => f x) with f in H
+           | [ |- context[fun x => ?f x] ] => change (fun x => f x) with f
          end.
 
 Lemma sigT_eta : forall A (P : A -> Type) (x : sigT P),
@@ -681,58 +681,58 @@ Qed.
 
 Ltac rewrite_eta_in Hf :=
   repeat match type of Hf with
-           | context[match ?E with existT2 _ _ _ => _ end] => rewrite (sigT2_eta E) in Hf; simpl in Hf
-           | context[match ?E with exist2 _ _ _ => _ end] => rewrite (sig2_eta E) in Hf; simpl in Hf
-           | context[match ?E with existT _ _ => _ end] => rewrite (sigT_eta E) in Hf; simpl in Hf
-           | context[match ?E with exist _ _ => _ end] => rewrite (sig_eta E) in Hf; simpl in Hf
+           | context[match ?E with existT2 _ _ _ _ _ => _ end] => rewrite (sigT2_eta E) in Hf; simpl in Hf
+           | context[match ?E with exist2 _ _ _ _ _ => _ end] => rewrite (sig2_eta E) in Hf; simpl in Hf
+           | context[match ?E with existT _ _ _ => _ end] => rewrite (sigT_eta E) in Hf; simpl in Hf
+           | context[match ?E with exist _ _ _ => _ end] => rewrite (sig_eta E) in Hf; simpl in Hf
            | context[match ?E with pair _ _ => _ end] => rewrite (prod_eta E) in Hf; simpl in Hf
          end.
 
 Ltac rewrite_eta :=
   repeat match goal with
-           | [ |- context[match ?E with existT2 _ _ _ => _ end] ] => rewrite (sigT2_eta E); simpl
-           | [ |- context[match ?E with exist2 _ _ _ => _ end] ] => rewrite (sig2_eta E); simpl
-           | [ |- context[match ?E with existT _ _ => _ end] ] => rewrite (sigT_eta E); simpl
-           | [ |- context[match ?E with exist _ _ => _ end] ] => rewrite (sig_eta E); simpl
+           | [ |- context[match ?E with existT2 _ _ _ _ _  => _ end] ] => rewrite (sigT2_eta E); simpl
+           | [ |- context[match ?E with exist2 _ _ _ _ _=> _ end] ] => rewrite (sig2_eta E); simpl
+           | [ |- context[match ?E with existT _ _ _ => _ end] ] => rewrite (sigT_eta E); simpl
+           | [ |- context[match ?E with exist _ _ _ => _ end] ] => rewrite (sig_eta E); simpl
            | [ |- context[match ?E with pair _ _ => _ end] ] => rewrite (prod_eta E); simpl
          end.
 
 Ltac intro_proj2_sig_from_goal'_by tac :=
   repeat match goal with
-           | [ |- appcontext[proj1_sig ?x] ] => tac (proj2_sig x)
-           | [ |- appcontext[proj1_sig (sig_of_sig2 ?x)] ] => tac (proj3_sig x)
+           | [ |- context[proj1_sig ?x] ] => tac (proj2_sig x)
+           | [ |- context[proj1_sig (sig_of_sig2 ?x)] ] => tac (proj3_sig x)
          end.
 
 Ltac intro_proj2_sig_from_goal_by tac :=
   repeat match goal with
-           | [ |- appcontext[proj1_sig ?x] ] => tac (proj2_sig x)
-           | [ |- appcontext[proj1_sig (sig_of_sig2 ?x)] ] => tac (proj3_sig x)
+           | [ |- context[proj1_sig ?x] ] => tac (proj2_sig x)
+           | [ |- context[proj1_sig (sig_of_sig2 ?x)] ] => tac (proj3_sig x)
          end; simpl in *.
 
 Ltac intro_projT2_from_goal_by tac :=
   repeat match goal with
-           | [ |- appcontext[projT1 ?x] ] => tac (projT2 x)
-           | [ |- appcontext[projT1 (sigT_of_sigT2 ?x)] ] => tac (projT3 x)
+           | [ |- context[projT1 ?x] ] => tac (projT2 x)
+           | [ |- context[projT1 (sigT_of_sigT2 ?x)] ] => tac (projT3 x)
          end; simpl in *.
 
 Ltac intro_proj2_sig_by tac :=
   repeat match goal with
-           | [ |- appcontext[proj1_sig ?x] ] => tac (proj2_sig x)
-           | [ H : appcontext[proj1_sig ?x] |- _ ] => tac (proj2_sig x)
-           | [ H := appcontext[proj1_sig ?x] |- _ ] => tac (proj2_sig x)
-           | [ |- appcontext[proj1_sig (sig_of_sig2 ?x)] ] => tac (proj3_sig x)
-           | [ H : appcontext[proj1_sig (sig_of_sig2 ?x)] |- _ ] => tac (proj3_sig x)
-           | [ H := appcontext[proj1_sig (sig_of_sig2 ?x)] |- _ ] => tac (proj3_sig x)
+           | [ |- context[proj1_sig ?x] ] => tac (proj2_sig x)
+           | [ H : context[proj1_sig ?x] |- _ ] => tac (proj2_sig x)
+           | [ H := context[proj1_sig ?x] |- _ ] => tac (proj2_sig x)
+           | [ |- context[proj1_sig (sig_of_sig2 ?x)] ] => tac (proj3_sig x)
+           | [ H : context[proj1_sig (sig_of_sig2 ?x)] |- _ ] => tac (proj3_sig x)
+           | [ H := context[proj1_sig (sig_of_sig2 ?x)] |- _ ] => tac (proj3_sig x)
          end; simpl in *.
 
 Ltac intro_projT2_by tac :=
   repeat match goal with
-           | [ |- appcontext[projT1 ?x] ] => tac (projT2 x)
-           | [ H : appcontext[projT1 ?x] |- _ ] => tac (projT2 x)
-           | [ H := appcontext[projT1 ?x] |- _ ] => tac (projT2 x)
-           | [ |- appcontext[projT1 (sigT_of_sigT2 ?x)] ] => tac (projT3 x)
-           | [ H : appcontext[projT1 (sigT_of_sigT2 ?x)] |- _ ] => tac (projT3 x)
-           | [ H := appcontext[projT1 (sigT_of_sigT2 ?x)] |- _ ] => tac (projT3 x)
+           | [ |- context[projT1 ?x] ] => tac (projT2 x)
+           | [ H : context[projT1 ?x] |- _ ] => tac (projT2 x)
+           | [ H := context[projT1 ?x] |- _ ] => tac (projT2 x)
+           | [ |- context[projT1 (sigT_of_sigT2 ?x)] ] => tac (projT3 x)
+           | [ H : context[projT1 (sigT_of_sigT2 ?x)] |- _ ] => tac (projT3 x)
+           | [ H := context[projT1 (sigT_of_sigT2 ?x)] |- _ ] => tac (projT3 x)
          end; simpl in *.
 
 
@@ -760,7 +760,7 @@ Ltac recr_destruct_rewrite_rev H := recr_destruct_with do_rewrite_rev H.
 
 Ltac use_proj2_sig_with tac :=
   repeat match goal with
-           | [ |- appcontext[proj1_sig ?x] ] =>
+           | [ |- context[proj1_sig ?x] ] =>
              match x with
                | context[proj1_sig] => fail 1
                | _ => simpl_do_clear tac (proj2_sig x)
@@ -770,8 +770,8 @@ Ltac use_proj2_sig_with tac :=
 Ltac rewrite_proj2_sig := use_proj2_sig_with recr_destruct_rewrite.
 Ltac rewrite_rev_proj2_sig := use_proj2_sig_with recr_destruct_rewrite_rev.
 
-Definition is_unique (A : Type) (x : A) := forall x' : A, x' = x.
-Implicit Arguments is_unique [A].
+Definition is_unique {A : Type} (x : A) := forall x' : A, x' = x.
+(* Implicit Arguments is_unique [A]. *)
 
 Ltac rewrite_unique :=
   match goal with
@@ -883,7 +883,7 @@ Ltac simultaneous_rewrite_rev E := specialize_with_evars_then_do E ltac:(fun E =
 Ltac conv_rewrite_with rew_tac H := specialize_with_evars_then_do H ltac:(fun H =>
   match type of H with
     | ?a = _ => match goal with
-                  | [ |- appcontext[?a'] ] => let H' := fresh in assert (H' : a = a') by reflexivity; clear H';
+                  | [ |- context[?a'] ] => let H' := fresh in assert (H' : a = a') by reflexivity; clear H';
                     change a' with a; rew_tac H
                 end
   end
@@ -891,7 +891,7 @@ Ltac conv_rewrite_with rew_tac H := specialize_with_evars_then_do H ltac:(fun H 
 Ltac conv_rewrite_rev_with rew_tac H := specialize_with_evars_then_do H ltac:(fun H =>
   match type of H with
     | _ = ?a => match goal with
-                  | [ |- appcontext[?a'] ] => let H' := fresh in assert (H' : a = a') by reflexivity; clear H';
+                  | [ |- context[?a'] ] => let H' := fresh in assert (H' : a = a') by reflexivity; clear H';
                     change a' with a; rew_tac H
                 end
   end
@@ -974,8 +974,8 @@ Ltac destruct_to_empty_set :=
 
 Ltac destruct_to_empty_set_in_match :=
   match goal with
-    | [ |- appcontext[match ?x with end] ] => solve [ destruct x || let H := fresh in pose x as H; destruct H ]
-    | [ _ : appcontext[match ?x with end] |- _ ] => solve [ destruct x || let H := fresh in pose x as H; destruct H ]
+    | [ |- context[match ?x with end] ] => solve [ destruct x || let H := fresh in pose x as H; destruct H ]
+    | [ _ : context[match ?x with end] |- _ ] => solve [ destruct x || let H := fresh in pose x as H; destruct H ]
   end.
 
 Ltac destruct_first_if_not_second a b :=
@@ -1062,20 +1062,20 @@ Section unit.
   Defined.
 End unit.
 
-Hint Rewrite True_singleton.
-Hint Extern 0 (@eq True _ _) => apply True_eq.
-Hint Extern 0 (@eq (@eq True _ _) _ _) => apply True_eq_eq.
-Hint Extern 0 (@JMeq True _ True _) => apply True_JMeq.
-Hint Extern 0 True => constructor.
-Hint Extern 0 (@eq False _ _) => apply False_eq.
-Hint Extern 0 (@JMeq False _ _ _) => apply False_JMeql.
-Hint Extern 0 (@JMeq _ _ False _) => apply False_JMeqr.
+Hint Rewrite True_singleton : cattheory_db .
+Hint Extern 0 (@eq True _ _) => apply True_eq : cattheory_db.
+Hint Extern 0 (@eq (@eq True _ _) _ _) => apply True_eq_eq : cattheory_db.
+Hint Extern 0 (@JMeq True _ True _) => apply True_JMeq : cattheory_db.
+Hint Extern 0 True => constructor : cattheory_db.
+Hint Extern 0 (@eq False _ _) => apply False_eq : cattheory_db.
+Hint Extern 0 (@JMeq False _ _ _) => apply False_JMeql : cattheory_db.
+Hint Extern 0 (@JMeq _ _ False _) => apply False_JMeqr : cattheory_db.
 
-Hint Rewrite unit_singleton.
-Hint Extern 0 (@eq unit _ _) => apply unit_eq.
-Hint Extern 0 (@eq (@eq unit _ _) _ _) => apply unit_eq_eq.
-Hint Extern 0 (@JMeq unit _ unit _) => apply unit_JMeq.
-Hint Extern 0 unit => constructor.
-Hint Extern 0 (@eq ∅ _ _) => apply Empty_set_eq.
-Hint Extern 0 (@JMeq ∅ _ _ _) => apply Empty_set_JMeql.
-Hint Extern 0 (@JMeq _ _ ∅ _) => apply Empty_set_JMeqr.
+Hint Rewrite unit_singleton : cattheory_db.
+Hint Extern 0 (@eq unit _ _) => apply unit_eq : cattheory_db.
+Hint Extern 0 (@eq (@eq unit _ _) _ _) => apply unit_eq_eq : cattheory_db.
+Hint Extern 0 (@JMeq unit _ unit _) => apply unit_JMeq : cattheory_db.
+Hint Extern 0 unit => constructor : cattheory_db.
+Hint Extern 0 (@eq ∅ _ _) => apply Empty_set_eq : cattheory_db.
+Hint Extern 0 (@JMeq ∅ _ _ _) => apply Empty_set_JMeql : cattheory_db.
+Hint Extern 0 (@JMeq _ _ ∅ _) => apply Empty_set_JMeqr : cattheory_db.

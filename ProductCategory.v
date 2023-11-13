@@ -241,13 +241,13 @@ Section cat_has_products.
                    | _ => progress destruct_head_hnf @prod
                    | _ => progress subst_eq_refl
                    | _ => progress simpl in * (* must come high up *)
-                   | [ |- appcontext[match ?f ?x with _ => _ end] ] =>
+                   | [ |- context[match ?f ?x with _ => _ end] ] =>
                      let T := type of (f x) in
                      match type of T with
                        | Prop => generalize (f x)
                      end
                    | [ |- context[MorphismOf ?F ?m] ] => generalize (MorphismOf F m)
-                   | [ |- appcontext[ObjectOf ?F ?x] ] => generalize (ObjectOf F x)
+                   | [ |- context[ObjectOf ?F ?x] ] => generalize (ObjectOf F x)
                    | _ => intro
                  end
         ).

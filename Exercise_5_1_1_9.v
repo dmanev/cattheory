@@ -273,7 +273,7 @@ Section Exercise_5_1_1_9.
              | _ => intro
              | _ => reflexivity
              | [ H : _ |- _ ] => apply equiv_helper in H
-             | [ |- appcontext[match ?E with _ => _ end] ] => case E
+             | [ |- context[match ?E with _ => _ end] ] => case E
              | _ => progress simpl in *
              | _ => progress destruct_head_hnf @ex
              | _ => progress destruct_head_hnf @inhabited
@@ -311,7 +311,7 @@ Section Exercise_5_1_1_9.
                    | _ => split
                    | _ => assumption
                    | _ => apply Functor_Eq
-                   | [ |- appcontext[match ?E with _ => _ end] ] => (case E; simpl)
+                   | [ |- context[match ?E with _ => _ end] ] => (case E; simpl)
                    | _ => apply functional_extensionality_dep
                    | [ H : _ |- _ ] => apply equiv_helper in H
                    | _ => progress subst

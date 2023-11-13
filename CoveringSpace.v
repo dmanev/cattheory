@@ -180,7 +180,7 @@ Section covering_space.
       split; simpl; eta_red;
       specialize_all_ways.
       repeat match goal with
-               | [ H : appcontext[Homeomorphism] |- _ ] => clear H
+               | [ H : context[Homeomorphism] |- _ ] => clear H
              end.
       pose (proj1_sig E).
       simpl in *.

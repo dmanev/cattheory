@@ -258,7 +258,7 @@ Module Exercise_4_5_2_3.
           f_equal;
           compute;
           repeat match goal with
-                   | [ |- appcontext[match ?E with _ => _ end] ] => case E
+                   | [ |- context[match ?E with _ => _ end] ] => case E
                  end;
           reflexivity
         ).

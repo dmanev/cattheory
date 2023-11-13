@@ -150,8 +150,8 @@ Reserved Notation "F ⟨ - , d ⟩" (at level 70, no associativity).
 
 
 
-(* Reserved Notation "i ⁻¹" (at level 10).
-Reserved Notation "C ᵒᵖ" (at level 10). *)
+Reserved Notation "i ⁻¹" (at level 10).
+(* Reserved Notation "C ᵒᵖ" (at level 10). *)
 
 Reserved Notation "C ★^ M D" (at level 70, no associativity).
 Reserved Notation "C ★^{ M } D" (at level 70, no associativity).

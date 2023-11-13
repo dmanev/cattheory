@@ -123,7 +123,7 @@ Record isomorphic X Y :=
     isomorphic_is_isomorphism :> is_isomorphism isomorphic_morphism
   }.
 
-Hint Resolve isomorphic_is_isomorphism.
+Hint Resolve isomorphic_is_isomorphism : cattheory_db.
 
 Infix "≅" := (isomorphic) (at level 70) : type_scope.
 
@@ -177,7 +177,8 @@ Section isomorphic_relation.
   Definition isomorphic_transitive : Transitive isomorphic.
     intros x y z f g.
     exists (g o f).
-    exists (f ⁻¹ o g ⁻¹);
+    (* exists (f ⁻¹ o g ⁻¹); *)
+    exists (fun z' => isomorphism_inverse f (isomorphism_inverse g z'));
       t.
   Defined.
 End isomorphic_relation.

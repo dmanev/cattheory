@@ -186,7 +186,7 @@ Section Functors_Equal.
       clear.
       subst.
       repeat match goal with
-               | [ |- appcontext[match ?f ?x with _ => _ end] ] => generalize (f x); clear; intros
+               | [ |- context[match ?f ?x with _ => _ end] ] => generalize (f x); clear; intros
              end.
       repeat match goal with
                | [ H : ?x = ?x |- _ ] => assert (H = eq_refl) by apply ProofIrrelevance.proof_irrelevance;

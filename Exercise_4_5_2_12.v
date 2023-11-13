@@ -210,7 +210,7 @@ Module Exercise_4_5_2_12.
     try exact eq_refl;
     simpl in *;
     try match goal with
-          | [ |- appcontext[False_rect _ ?pf] ] => solve [ case pf ]
+          | [ |- context[False_rect _ ?pf] ] => solve [ case pf ]
         end;
     exfalso;
     abstract (

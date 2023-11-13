@@ -254,8 +254,8 @@ Ltac replace_InSet := create_setOf_InSet;
            | [ H : InSet ?C ?x |- InSet ?C ?x' ] => apply (SetContainsEquivalent H)
            | [ |- exists v : ?T, @?G v ] =>
              match G with
-               | appcontext[InSet ?C ?v] => fail 1 (* [?v] cannot be the same as [v] above, so we fail *)
-               | appcontext[InSet ?C _] => (* match an [InSet] expression that references a variable not scoped outside.
+               | context[InSet ?C ?v] => fail 1 (* [?v] cannot be the same as [v] above, so we fail *)
+               | context[InSet ?C _] => (* match an [InSet] expression that references a variable not scoped outside.
                                                 This is a kludge to get the correct InSet, which matches the [exists]. *)
                  let v := fresh in let H := fresh in
                    destruct (SetInhabited C) as [ v H ]; exists v
@@ -468,8 +468,8 @@ Section description.
     repeat match goal with
              | _ => progress intuition
              | _ => intro
-             | [ |- appcontext[match ?E with _ => _ end] ] => case E
-             | [ H : appcontext[match ?E with _ => _ end] |- _ ] => destruct E
+             | [ |- context[match ?E with _ => _ end] ] => case E
+             | [ H : context[match ?E with _ => _ end] |- _ ] => destruct E
              | [ H : _ |- _ ] => solve [ inversion H ]
              | _ => progress (hnf in *; simpl in *; idtac)
            end.
@@ -490,8 +490,8 @@ Section description.
       repeat match goal with
                | _ => progress intuition
                | _ => intro
-               | [ |- appcontext[match ?E with _ => _ end] ] => case E
-               | [ H : appcontext[match ?E with _ => _ end] |- _ ] => destruct E
+               | [ |- context[match ?E with _ => _ end] ] => case E
+               | [ H : context[match ?E with _ => _ end] |- _ ] => destruct E
                | [ H : _ |- _ ] => solve [ inversion H ]
                | _ => progress unfold EquivalenceSet_eq_lift
                | _ => progress (hnf in *; simpl in *; idtac)

@@ -184,8 +184,8 @@ Section EpiMono.
       | [ H : ~_ |- _ ] => contradict H; solve [ t' ]
       | [ dec : forall _, {_} + {_} |- _ ] =>
         match goal with
-          | [ _ : appcontext[dec ?x] |- _ ] => destruct (dec x)
-          | [ |- appcontext[dec ?x] ] => destruct (dec x)
+          | [ _ : context[dec ?x] |- _ ] => destruct (dec x)
+          | [ |- context[dec ?x] ] => destruct (dec x)
         end
       | _ => apply functional_extensionality_dep; intro
       | _ => progress (unfold compose in *; simpl in *; fg_equal)

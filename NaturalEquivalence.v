@@ -8,7 +8,7 @@ Generalizable All Variables.
 
 Local Ltac intro_object_of :=
   repeat match goal with
-           | [ |- appcontext[ObjectOf ?G ?x] ] => unique_pose_with_body (ObjectOf G x)
+           | [ |- context[ObjectOf ?G ?x] ] => unique_pose_with_body (ObjectOf G x)
          end.
 
 Section NaturalIsomorphism.
@@ -34,7 +34,7 @@ Section NaturalIsomorphism.
       abstract (
           intros;
           repeat match goal with
-                   | [ |- appcontext[?E] ] => match type of E with | IsomorphismOf _ => destruct E; simpl end
+                   | [ |- context[?E] ] => match type of E with | IsomorphismOf _ => destruct E; simpl end
                    | [ H : _ |- _ ] => rewrite H
                  end;
           destruct T as [ [ ] ];
@@ -67,7 +67,7 @@ Section NaturalIsomorphism.
                | _ => progress (repeat rewrite LeftIdentity; repeat rewrite RightIdentity)
                | _ => progress repeat rewrite <- FCompositionOf
                | _ => progress repeat rewrite FIdentityOf
-               | [ |- appcontext[?E] ] =>
+               | [ |- context[?E] ] =>
                  match type of E with
                    | IsomorphismOf _ => destruct E; simpl
                  end
