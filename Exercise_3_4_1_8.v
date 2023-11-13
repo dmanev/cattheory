@@ -98,7 +98,7 @@
 
 Require Import Setoid Utf8.
 Require Import ProofIrrelevance.
-Require Import ZArith Omega.
+Require Import ZArith Lia.
 Require Import Common Orders.
 
 Set Implicit Arguments.
@@ -128,7 +128,7 @@ Section Exercise_3_4_1_8.
              | _ => intro
              | [ H : sig _ |- _ ] => destruct H
              | _ => apply proof_irrelevance
-             | _ => omega
+             | _ => lia
              | _ => apply f_equal
            end.
 
@@ -158,15 +158,15 @@ Section Exercise_3_4_1_8.
     \/ Same_relation R Exercise_3_4_1_8_R3
     \/ Same_relation R Exercise_3_4_1_8_R4.
   Proof.
-    assert (S1 : 1 <= 1 <= 2) by omega.
-    assert (S2 : 1 <= 2 <= 2) by omega.
+    assert (S1 : 1 <= 1 <= 2) by lia.
+    assert (S2 : 1 <= 2 <= 2) by lia.
     pose (exist _ 1 S1 : finite_set 2) as s1.
     pose (exist _ 2 S2 : finite_set 2) as s2.
     Ltac t'0 tac := repeat match goal with
                              | [ H0 : _, H : ?R ?a ?a -> False |- _ ] => case (H (H0 a))
                              | _ => progress (compute in *; tac)
                              | _ => intro
-                             | _ => omega
+                             | _ => lia
                              | [ H : sig _ |- _ ] => destruct H
                              | [ H : ?P, H' : ?P |- _ ] => assert (H = H') by (apply proof_irrelevance);
                                                           subst H'
@@ -204,7 +204,7 @@ Section Exercise_3_4_1_8.
                                  | [ |- context[S (S (S n))] ] => fail 1
                                  | _ => destruct n
                                end;
-                              try omega
+                              try lia
          end.
 
     t''.
@@ -268,15 +268,15 @@ Section Exercise_3_4_1_8.
              | 2 => _
              | S (S (S x0)) => _
            end;
-      intuition; try omega.
+      intuition; try lia.
       do 3 match goal with
-             | [ H : ℕ |- _ ] => destruct H; compute in *; trivial; try omega
+             | [ H : ℕ |- _ ] => destruct H; compute in *; trivial; try lia
            end.
-    destruct x; try omega; trivial.
-    destruct x; try omega.
-    destruct x; try omega.
-    destruct x0; try omega.
-    destruct x0; try omega.
+    destruct x; try lia; trivial.
+    destruct x; try lia.
+    destruct x; try lia.
+    destruct x0; try lia.
+    destruct x0; try lia.
     apply
 
     solve [ t ].

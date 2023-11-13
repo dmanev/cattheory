@@ -98,7 +98,7 @@
 
 Require Import Setoid Utf8.
 Require Import ProofIrrelevance.
-Require Import ZArith Omega.
+Require Import ZArith Lia.
 Require Import Common Orders.
 
 Set Implicit Arguments.
@@ -131,7 +131,7 @@ Section Exercise_3_4_1_7.
              | _ => intro
              | [ H : sig _ |- _ ] => destruct H
              | _ => apply proof_irrelevance
-             | _ => omega
+             | _ => lia
              | _ => apply f_equal
            end.
 
@@ -153,8 +153,8 @@ Section Exercise_3_4_1_7.
   Example Exercise_3_4_1_7_R_not_comparable : ¬(Comparable R).
   Proof.
     intro H.
-    assert (S1 : 1 <= 1 <= 4) by omega.
-    assert (S2 : 1 <= 2 <= 4) by omega.
+    assert (S1 : 1 <= 1 <= 4) by lia.
+    assert (S2 : 1 <= 2 <= 4) by lia.
     specialize (H (exist _ 1 S1) (exist _ 2 S2)).
     t.
   Qed.
@@ -162,8 +162,8 @@ Section Exercise_3_4_1_7.
   Example Exercise_3_4_1_7_R'_not_antisymmetric : ¬(Antisymmetric _ _ R').
   Proof.
     intro H.
-    assert (S1 : 1 <= 1 <= 4) by omega.
-    assert (S2 : 1 <= 2 <= 4) by omega.
+    assert (S1 : 1 <= 1 <= 4) by lia.
+    assert (S2 : 1 <= 2 <= 4) by lia.
     specialize (H (exist _ 1 S1) (exist _ 2 S2) I I).
     inversion H.
   Qed.

@@ -97,7 +97,7 @@
 (** printing ↷ %\ensuremath{\lefttorightarrow}% #<div style="display:inline-block; transform:rotate(90deg);-o-transform:rotate(90deg);-mod-transform:rotate(90deg);-webkit-transform:rotate(90deg);">&#x21ba;</div># *)
 
 Require Import Setoid Utf8.
-Require Import ZArith Omega.
+Require Import ZArith Lia.
 Require Import Common Orders.
 
 Set Implicit Arguments.
@@ -140,7 +140,7 @@ Section Exercise_3_4_1_2.
   Example Exercise_3_4_1_2_left_relation_linear_order
   : LinearOrder Exercise_3_4_1_2_left_relation.
   Proof.
-    split; compute; intros; omega.
+    split; compute; intros; lia.
   Qed.
   Example Exercise_3_4_1_2_middle_relation_not_reflexive
   : ¬(Reflexive Exercise_3_4_1_2_middle_relation).
