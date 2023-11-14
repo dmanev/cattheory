@@ -14,7 +14,7 @@ This is scientific library with exersises intended for learning Cathegory Theory
 
 * Each module has to be separately compiled with
 ```
-$ coq <module_name.v>
+$ coqc <module_name.v>
 ```
 * The two focal modules are:
   * `Notations.v`
