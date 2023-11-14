@@ -5,3 +5,6 @@
 *.vos
 *.aux
 *.cache
+
+# vscode
+.vscode
