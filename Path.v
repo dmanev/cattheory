@@ -117,20 +117,20 @@ Section path.
 
   Fixpoint prepend s d (p : path s d) : forall s', E s' s -> path s' d :=
     match p with
-      | NoEdges => fun _ E' => AddEdge (NoEdges _) E'
-      | AddEdge _ _ p' E => fun _ E' => AddEdge (prepend p' E') E
+      | NoEdges _ => fun _ E' => AddEdge (NoEdges _) E'
+      | AddEdge p' E => fun _ E' => AddEdge (prepend p' E') E
     end.
 
   Fixpoint concatenate s d d' (p : path s d) (p' : path d d') : path s d' :=
     match p' with
-      | NoEdges => p
-      | AddEdge _ _ p' E => AddEdge (concatenate p p') E
+      | NoEdges _ => p
+      | AddEdge p' E => AddEdge (concatenate p p') E
     end.
 
   Fixpoint concatenate' s d (p : path s d) : forall d', path d d' -> path s d' :=
     match p with
-      | NoEdges => fun _ p' => p'
-      | AddEdge _ _ p E => fun _ p' => concatenate' p (prepend p' E)
+      | NoEdges _ => fun _ p' => p'
+      | AddEdge p E => fun _ p' => concatenate' p (prepend p' E)
     end.
 
   Variable typeOf : V -> Type.
@@ -138,12 +138,12 @@ Section path.
 
   Fixpoint compose_path s d (p : path s d) : typeOf s -> typeOf d :=
     match p with
-      | NoEdges => fun x => x
-      | AddEdge _ _ p' E => fun x => functionOf E (compose_path p' x)
+      | NoEdges _ => fun x => x
+      | AddEdge p' E => fun x => functionOf E (compose_path p' x)
     end.
 End path.
 
-Arguments NoEdges [V E s].
+Arguments NoEdges {V E s}.
 Arguments AddEdge [V E s d d'] _ _.
 Arguments prepend [V E s d] p [s'] p'.
 
